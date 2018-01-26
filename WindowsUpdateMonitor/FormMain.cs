@@ -45,7 +45,7 @@ namespace WindowsUpdateMonitor
             return false;
         }
 
-        private void CheckWindowsUpdateSettings()
+        private async void CheckWindowsUpdateSettings()
         {
             StopRegistryKeyWatchers();
 
@@ -79,8 +79,21 @@ namespace WindowsUpdateMonitor
                 AppendLogText("Executing Windows Update check");
 
                 var windowsUpdate = new WUApiLib.AutomaticUpdatesClass();
-                windowsUpdate.EnableService();
-                windowsUpdate.DetectNow();
+                if (!windowsUpdate.ServiceEnabled)
+                {
+                    windowsUpdate.EnableService();
+                    await Task.Delay(1000);
+                }
+
+                // 0x8024A000 - No AU available. Error codes here: https://support.microsoft.com/en-us/help/938205/windows-update-error-code-list
+                try
+                {
+                    windowsUpdate.DetectNow();
+                }
+                catch (Exception e)
+                {
+                    AppendLogText($"Error executing Windows Update check: {e}");
+                }
             }
 
             _checkRunning = false;
