@@ -136,7 +136,9 @@ namespace WindowsUpdateMonitor
 
         private void FormMain_Shown(object sender, EventArgs e)
         {
+#if !DEBUG
             WindowState = FormWindowState.Minimized;
+#endif
             CheckWindowsUpdateSettings();
         }
 
