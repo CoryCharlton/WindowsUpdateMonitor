@@ -158,7 +158,7 @@ namespace WindowsUpdateMonitor
 
             _checkPending = true;
 
-            Task.Delay(TimeSpan.FromSeconds(5)).ContinueWith((t) => CheckWindowsUpdateSettings());
+            Task.Delay(TimeSpan.FromSeconds(5)).ContinueWith(_ => CheckWindowsUpdateSettings());
         }
 
         private void StartRegistryKeyWatchers()
